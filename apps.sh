@@ -24,13 +24,14 @@ cli_help(){
 cat << "EOF"
 
    --help 	printing this options
+   --list	list certificate
    --new	create certificate
    --renew 	renew certificate
 
 EOF
 }
 
-# main program
+# main script
 
 cli_banner
 
@@ -50,14 +51,21 @@ case $1 in
 
   --renew|d)
     read -p 'Your Renew Domain : ' DOMAIN
-    certbot certonly \
+    certbot renew \
       --work-dir /opt/certbot \
       --logs-dir /opt/certbot \
       --config-dir /opt/certbot \
       --dns-digitalocean \
       --dns-digitalocean-propagation-seconds 10 \
       --dns-digitalocean-credentials ~/.secrets/config.ini \
-      -d "$DOMAIN"
+      --cert-name "$DOMAIN"
+    ;;
+
+  --list|d)
+    certbot certificates \
+      --work-dir /opt/certbot \
+      --logs-dir /opt/certbot \
+      --config-dir /opt/certbot
     ;;
 
   *)
